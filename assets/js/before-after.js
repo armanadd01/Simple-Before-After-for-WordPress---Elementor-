@@ -24,7 +24,8 @@
         this.moveOnHover = this.container.data('move-on-hover') === 'yes';
         this.clickToMove = this.container.data('click-to-move') === 'yes';
         this.mobileOrientation = this.container.data('mobile-orientation') || 'horizontal';
-        this.labelVisibility = this.container.data('label-visibility') || 'always';
+        // Prefer attribute read to avoid jQuery .data() caching issues (Elementor can update attributes live)
+        this.labelVisibility = this.container.attr('data-label-visibility') || this.container.data('label-visibility') || 'always';
 
         this.isDragging = false;
         this.startPos = 0;
@@ -35,8 +36,21 @@
 
     FloristBeforeAfter.prototype.init = function() {
         this.checkMobileOrientation();
+        this.applyLabelVisibilityMode();
         this.setInitialPosition();
         this.bindEvents();
+    };
+
+    FloristBeforeAfter.prototype.applyLabelVisibilityMode = function() {
+        // Re-read from attribute in case Elementor updated it
+        this.labelVisibility = this.container.attr('data-label-visibility') || this.labelVisibility || 'always';
+
+        this.container.removeClass('fba-label-visibility-always fba-label-visibility-hover fba-label-visibility-move');
+        this.container.addClass('fba-label-visibility-' + this.labelVisibility);
+
+        if (this.labelVisibility !== 'move') {
+            this.container.removeClass('fba-labels-visible');
+        }
     };
 
     FloristBeforeAfter.prototype.checkMobileOrientation = function() {
@@ -51,6 +65,9 @@
     };
 
     FloristBeforeAfter.prototype.revealLabelsIfNeeded = function() {
+        // Re-check current mode (Elementor can change it without a full reload)
+        this.applyLabelVisibilityMode();
+
         if (this.labelVisibility === 'move') {
             this.container.addClass('fba-labels-visible');
         }
@@ -178,16 +195,24 @@
             }
         }
 
-        // Update label side visibility based on position
-        // 0%: show only right-side label (the right image is fully visible)
-        // 100%: show only left-side label
-        // Anything in between: show both labels
-        this.container.removeClass('fba-left-only fba-right-only');
+        // Always hide the label on the empty side
+        this.container.removeClass('fba-left-only fba-right-only fba-middle-left fba-middle-right');
 
-        if (position === 0) {
-            this.container.addClass('fba-right-only');
-        } else if (position === 100) {
+        // Use a threshold because drag/click math often produces fractional values
+        var edgeThreshold = 1;
+
+        if (position <= edgeThreshold) {
+            // Bar at far left - only right side (After) is visible
             this.container.addClass('fba-left-only');
+        } else if (position >= 100 - edgeThreshold) {
+            // Bar at far right - only left side (Before) is visible
+            this.container.addClass('fba-right-only');
+        } else if (position < 50) {
+            // In middle, but more right side visible - hide left label
+            this.container.addClass('fba-middle-right');
+        } else {
+            // In middle, but more left side visible - hide right label
+            this.container.addClass('fba-middle-left');
         }
     };
 

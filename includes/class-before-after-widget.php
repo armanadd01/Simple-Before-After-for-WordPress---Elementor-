@@ -860,7 +860,7 @@ class Florist_Before_After_Widget extends \Elementor\Widget_Base {
         $hide_on_mobile = isset($settings['hide_on_mobile']) ? $settings['hide_on_mobile'] : 'no';
 
         if ($hide_on_mobile === 'yes') {
-            $this->add_render_attribute('container', 'class', 'fba-container fba-has-overlay elementor-hidden-mobile');
+            $this->add_render_attribute('container', 'class', 'elementor-hidden-mobile');
         }
 
         $this->add_render_attribute('container', 'data-mobile-orientation', $mobile_orientation);

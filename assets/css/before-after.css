@@ -131,7 +131,8 @@
 }
 
 /* Label visibility modes */
-.fba-container[data-label-visibility="hover"] .fba-label {
+.fba-container[data-label-visibility="hover"] .fba-label,
+.fba-container.fba-label-visibility-hover .fba-label {
   opacity: 0 !important;
   visibility: hidden !important;
   transition:
@@ -139,12 +140,14 @@
     visibility 0.2s ease;
 }
 
-.fba-container[data-label-visibility="hover"]:hover .fba-label {
+.fba-container[data-label-visibility="hover"]:hover .fba-label,
+.fba-container.fba-label-visibility-hover:hover .fba-label {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-.fba-container[data-label-visibility="move"] .fba-label {
+.fba-container[data-label-visibility="move"] .fba-label,
+.fba-container.fba-label-visibility-move .fba-label {
   opacity: 0 !important;
   visibility: hidden !important;
   transition:
@@ -152,7 +155,8 @@
     visibility 0.2s ease;
 }
 
-.fba-container[data-label-visibility="move"].fba-labels-visible .fba-label {
+.fba-container[data-label-visibility="move"].fba-labels-visible .fba-label,
+.fba-container.fba-label-visibility-move.fba-labels-visible .fba-label {
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -166,12 +170,23 @@
 }
 
 /* When the bar is at an extreme, show only the appropriate side label */
-.fba-container.fba-left-only .fba-after-label {
+.fba-container.fba-left-only .fba-before-label {
   opacity: 0 !important;
   visibility: hidden !important;
 }
 
-.fba-container.fba-right-only .fba-before-label {
+.fba-container.fba-right-only .fba-after-label {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* When in the middle, show only the label for the more visible side */
+.fba-container.fba-middle-left .fba-after-label {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.fba-container.fba-middle-right .fba-before-label {
   opacity: 0 !important;
   visibility: hidden !important;
 }

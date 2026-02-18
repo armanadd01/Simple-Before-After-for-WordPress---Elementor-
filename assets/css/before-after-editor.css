@@ -1,0 +1,14 @@
+/* Editor specific styles for Elementor */
+.fba-container {
+    border: 1px dashed #ccc;
+    background-color: #f9f9f9;
+}
+
+.fba-error {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
